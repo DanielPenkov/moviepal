@@ -3,7 +3,7 @@
 class RestPhonesController extends AppController {
 	public $uses = array('Phone');
     public $helpers = array('Html', 'Form');
-	public $components = array('RequestHandler');
+	public $components = array('RequestHandler', 'Security');
 
 
 	public function index() {

@@ -7,6 +7,19 @@ App::uses('BlowfishPasswordHasher', 'Controller/Component/Auth');
 class User extends AppModel {
 
 
+     public $hasAndBelongsToMany = array(
+        'Movie' =>
+            array(
+                'className' => 'Movie',
+                'joinTable' => 'users_movies',
+                'foreignKey' => 'user_id',
+                'associationForeignKey' => 'movie_id'
+            )
+
+
+    );
+
+
 
 
 

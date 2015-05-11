@@ -1,45 +1,16 @@
 <?php
 App::uses('HttpSocket', 'Network/Http');
 class ClientController extends AppController {
-	public $components = array('Security', 'RequestHandler');
+	public $components = array('RequestHandler');
 	
 	public function index(){
 		
 	}
 
 	public function request_index(){
-	
-		// remotely post the information to the server
-		$link =  "http://" . $_SERVER['HTTP_HOST'] . $this->webroot.'rest_phones.json';
-		
-		$data = null;
-		$httpSocket = new HttpSocket();
-		$response = $httpSocket->get($link, $data );
-		$this->set('response_code', $response->code);
-		$this->set('response_body', $response->body);
-		
-		$this -> render('/Client/request_response');
-	}
 
-
-	public function request_posts(){
-	
 		// remotely post the information to the server
-		$link =  "http://" . $_SERVER['HTTP_HOST'] . $this->webroot.'rest_posts.json';
-		
-		$data = null;
-		$httpSocket = new HttpSocket();
-		$response = $httpSocket->get($link, $data );
-		$this->set('response_code', $response->code);
-		$this->set('response_body', $response->body);
-		
-		$this -> render('/Client/request_response');
-	}
-
-	public function get_all_movies(){
-	
-		// remotely post the information to the server
-		$link =  "http://" . $_SERVER['HTTP_HOST'] . $this->webroot.'rest_movies/get_all_movies.json';
+		$link =  "http://" . $_SERVER['HTTP_HOST'] . $this->webroot.'rest_movies.json';
 		
 		$data = null;
 		$httpSocket = new HttpSocket();
@@ -52,47 +23,47 @@ class ClientController extends AppController {
 
 
 
-
-
-
-
 	
-	public function request_view($id){
+	
+	public function request_addMovieWatchingList(){
 	
 		// remotely post the information to the server
-		$link =  "http://" . $_SERVER['HTTP_HOST'] . $this->webroot.'rest_phones/'.$id.'.json';
-
+		$link =  "http://" . $_SERVER['HTTP_HOST'] . $this->webroot.'rest_movies/addMovieWatchingList.json';
 		$data = null;
 		$httpSocket = new HttpSocket();
-		$response = $httpSocket->get($link, $data );
+		$data['Movie']['movie_id'] = '3320';
+		$data['Movie']['status'] = '1';
+		$data['User']['user_id'] = '39';
+		$response = $httpSocket->post($link, $data );
 		$this->set('response_code', $response->code);
 		$this->set('response_body', $response->body);
 		
 		$this -> render('/Client/request_response');
 	}
 	
-	public function request_edit($id){
+
+	public function request_addMovieWatchedList(){
 	
 		// remotely post the information to the server
-		$link =  "http://" . $_SERVER['HTTP_HOST'] . $this->webroot.'rest_phones/'.$id.'.json';
-
+		$link =  "http://" . $_SERVER['HTTP_HOST'] . $this->webroot.'rest_movies/addMovieWatchedList.json';
 		$data = null;
 		$httpSocket = new HttpSocket();
-		$data['Phone']['name'] = 'Updated Phone Name';
-		$data['Phone']['manufacturer'] = 'Updated Phone  Manufacturer';
-		$data['Phone']['name'] = 'Updated Phone  Description';
-		$response = $httpSocket->put($link, $data );
+		$data['Movie']['movie_id'] = '3574';
+		$data['Movie']['status'] = '2';
+		$data['User']['user_id'] = '39';
+		$response = $httpSocket->post($link, $data );
 		$this->set('response_code', $response->code);
 		$this->set('response_body', $response->body);
 		
 		$this -> render('/Client/request_response');
 	}
 	
-	public function request_add(){
-	
-		// remotely post the information to the server
-		$link =  "http://" . $_SERVER['HTTP_HOST'] . $this->webroot.'rest_phones.json';
 
+
+	public function movie_id(){
+	
+	
+		$link =  "http://" . $_SERVER['HTTP_HOST'] . $this->webroot.'rest_movies/movie_id.json';
 		$data = null;
 		$httpSocket = new HttpSocket();
 		$data['Phone']['name'] = 'New Phone';
@@ -104,15 +75,47 @@ class ClientController extends AppController {
 		
 		$this -> render('/Client/request_response');
 	}
-	
-	public function request_delete($id){
-	
-		// remotely post the information to the server
-		$link =  "http://" . $_SERVER['HTTP_HOST'] . $this->webroot.'rest_phones/'.$id.'.json';
 
+
+	public function request_getUserToWatchMovies(){
+
+		// remotely post the information to the server
+		$link =  "http://" . $_SERVER['HTTP_HOST'] . $this->webroot.'rest_users/getUserToWatchMovies/'.$id.'.json';
+		
 		$data = null;
 		$httpSocket = new HttpSocket();
-		$response = $httpSocket->delete($link, $data );
+		$response = $httpSocket->get($link, $data );
+		$this->set('response_code', $response->code);
+		$this->set('response_body', $response->body);
+		
+		$this -> render('/Client/request_response');
+	}
+
+
+	public function request_getUserWatchedMovies(){
+
+		// remotely post the information to the server
+		$link =  "http://" . $_SERVER['HTTP_HOST'] . $this->webroot.'rest_users/getUserWatchedMovies/'.$id.'.json';
+		
+		$data = null;
+		$httpSocket = new HttpSocket();
+		$response = $httpSocket->get($link, $data );
+		$this->set('response_code', $response->code);
+		$this->set('response_body', $response->body);
+		
+		$this -> render('/Client/request_response');
+	}
+
+
+
+	public function request_getUserFriends(){
+
+		// remotely post the information to the server
+		$link =  "http://" . $_SERVER['HTTP_HOST'] . $this->webroot.'rest_users/getUserFriends/'.$id.'.json';
+		
+		$data = null;
+		$httpSocket = new HttpSocket();
+		$response = $httpSocket->get($link, $data );
 		$this->set('response_code', $response->code);
 		$this->set('response_body', $response->body);
 		

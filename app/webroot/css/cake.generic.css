@@ -46,12 +46,12 @@ h1, h2, h3, h4 {
 	margin-bottom:0.5em;
 }
 h1 {
-	background:#fff;
+
 	color: #003d4c;
 	font-size: 100%;
 }
 h2 {
-	background:#fff;
+
 	color: #e32;
 	font-family:'Gill Sans','lucida grande', helvetica, arial, sans-serif;
 	font-size: 190%;
@@ -75,6 +75,7 @@ p {
 /** Layout **/
 #container {
 	text-align: left;
+	  background-color: #e5e5e5;
 }
 
 #header{
@@ -98,13 +99,17 @@ p {
 	text-decoration: underline;
 }
 #content{
-	background: #fff;
-	clear: both;
-	color: #333;
-	padding: 10px 20px 40px 20px;
-	overflow: auto;
-	  width: 50%;
-	  margin-left: 25%;
+  background: #e5e5e5;
+  clear: both;
+  color: #333;
+  padding: 10px 20px 40px 20px;
+  overflow: auto;
+
+  max-width: 1300px;
+
+  margin-top: 50px;
+  margin-right: auto;
+  margin-left: auto;
 
 }
 #footer {
@@ -120,9 +125,8 @@ p {
 div.form,
 div.index,
 div.view {
-	float:right;
+	float:left;
 	width:76%;
-	border-left:1px solid #666;
 	padding:10px 2%;
 }
 div.actions {
@@ -750,29 +754,238 @@ pre {
 	float: right;
 }
 
-.picture-container{
-	display: inline-block;
-	margin-bottom: 50px;  vertical-align: top;
-}
+
 
 .movie-title{
 
   color: #18bc9c;
   text-decoration: none;
-  margin-bottom: 20px;
+  width: 250px;
+  background-color: white;
+  padding: 10px;
+    height: 100px;
 
 }
 
 .title{
 
-	  font-size: 25px;
+    font-size: 20px;
+  line-height: 20px;
+  font-weight: bolder;
+  width: 80%;
+  margin: auto;
+    text-align: center;
 }
 
 .movie-short-info{
 	
 	display: inline-block;
-	width: 50%;
+	width: 30%;
 	vertical-align: top;
   	margin-left: 20px;
 
+}
+
+.movie-container{
+  margin-left: 15%;
+    height: 550px;
+      margin-bottom: 20px;
+}
+.movie-button{
+
+
+	height: 50px;
+	  padding-top: 10px;
+  text-align: center;
+}
+
+
+.user-container{
+	height: 300px;
+	margin-bottom: 20px;
+
+}
+
+.user-image{
+	height: 200px;
+  width: 200px;
+
+
+}
+
+.user-info{
+	  height: 50px;
+  width: 200px;
+  padding-top: 10px;
+  /* margin-bottom: 10px; */
+  background-color: white;
+  padding-left: 5px;
+
+
+}
+
+.user-button{
+	  background-color: white;
+  height: 40px;
+  width: 200px;
+  padding-top: 10px;
+  text-align: center;
+
+
+}
+
+.friend-container{
+	 width: 250px;
+	   margin-bottom: 20px;
+
+}
+
+.friend-image{
+	   display: inline-block;
+
+}
+
+.friend-info{
+	   display: inline-block;
+  background-color: white;
+  height: 80px;
+  vertical-align: top;
+  width: 150px;
+
+}
+
+.friend-name{
+
+	  padding-top: 25px;
+	    padding-left: 10px;
+}
+
+
+.user-notification-buttons{
+	 width: 250px;
+
+
+}
+
+.notification{
+
+
+	background-color: #78AB46;
+	  clear: both;
+  color: #fff;
+  font-size: 140%;
+  font-weight: bold;
+  margin: 0 0 1em 0;
+  padding: 5px;
+}
+
+#badge{
+
+
+	color:black;
+	  margin-left: 0px;
+}
+
+#notification-menu{
+
+	margin-right: 2px;
+}
+
+#badge-link{
+
+
+	padding-left: 0px;
+}
+
+#menu-login{
+	
+float: right;
+
+}
+
+.movie-title-profile{
+
+
+	  color: #18bc9c;
+  text-decoration: none;
+  width: 350px;
+
+  padding: 10px;
+  height: 40px;
+}
+
+.rating-block{
+
+  font-size: 16px;
+  line-height: 18px;
+
+  width: 80%;
+  margin: auto;
+   text-align: center;
+   color: black;
+   margin-top: 10px;
+
+}
+
+.buttons{
+
+
+	width:250px;
+	background-color: white;
+	border-top: 1px solid gray;
+	height: 50px;
+	  padding-top: 10px;
+}
+
+.buttons a{
+
+	  color: white;
+  text-decoration: none!important;
+}
+
+.page-title{
+
+
+	  padding: 30px 15px;
+  margin-bottom: 30px;
+  color: inherit;
+  background-color: #eee;
+    text-align: center;
+}
+
+#movie-list{
+
+	height: 600px;
+	  text-align: center;
+}
+
+
+.picture-container{
+    width:250px;
+    height:350px;
+    position:relative;
+    display:inline-block;
+    overflow:hidden;
+}
+
+
+.picture-container > a img {
+    position:absolute;
+    top:50%;
+    min-height:100%;
+    max-width: 100%;
+    display:block;
+    left:50%;
+    -webkit-transform: translate(-50%, -50%);
+    min-width:100%;
+}
+
+.acResults ul li {
+margin: 0px;
+padding: 2px 5px;
+cursor: pointer;
+display: block;
+font: menu;
+overflow: hidden;
+color: #333;
 }

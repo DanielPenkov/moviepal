@@ -1,0 +1,1 @@
+<a onclick="window.close();" href="javascript:void(0);">CLOSE</a>
