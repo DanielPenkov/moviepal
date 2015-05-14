@@ -1,18 +1,17 @@
 <?php
 App::uses('AppModel', 'Model');
 
+class UsersMovies extends AppModel {
 
-class Recommendation extends AppModel {
-
-		 public $belongsTo = array(
+	public $belongsTo = array(
         'Movie' => array(
             'className' => 'Movie',
             'foreignKey' => 'movie_id'
         )
     );
 
-	
 
-	
+
+
 
 }

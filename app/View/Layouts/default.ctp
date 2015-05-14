@@ -62,13 +62,12 @@ $cakeDescription = __d('MoviePal','MoviePal');
     	
       <ul class="nav navbar-nav">
         <li ><?php echo $this->Html->link('Movies', array('controller' => 'movies','action' => 'index'));?></li>
-        <li ><?php echo $this->Html->link('TV Series', array('controller' => 'movies','action' => 'tv_index'));?></li>
 
 
         <?php if ($loggedIn):?>
     	<li><?php echo $this->Html->link('My Profile', array('controller' => 'users','action' => 'index'));?></li>
     	<li><?php echo $this->Html->link('All Users', array('controller' => 'users','action' => 'allusers'));?></li>
-    	<li><?php echo $this->Html->link('Friends', array('controller' => 'users','action' => 'friends'));?></li>
+    	<li><?php echo $this->Html->link('Friends', array('controller' => 'users','action' => 'allFriends'));?></li>
     	<li id="notification-menu"><?php echo $this->Html->link('Notifications', array('controller' => 'notifications','action' => 'index',$userId));?></li>
     	<li id="badge"> <a id='badge-link'> <span class="badge"><?php echo $vat?></span></a></li>
 <?php endif; ?>
@@ -85,7 +84,7 @@ $cakeDescription = __d('MoviePal','MoviePal');
     		
 		<?php else: ?>
 			<li><?php echo $this->Html->link('Login', array('controller' => 'users','action' => 'login'));?></li>
-      		<li><?php echo $this->Html->link('Register', array('controller' => 'users','action' => 'add'));?></li>
+      		<li><?php echo $this->Html->link('Register', array('controller' => 'users','action' => 'register'));?></li>
 		<?php endif; ?>
 
 

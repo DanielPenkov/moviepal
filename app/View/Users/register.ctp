@@ -10,5 +10,5 @@
         echo $this->Form->input('email');
     ?>
     </fieldset>
-<?php echo $this->Form->end(__('Submit')); ?>
+<?php echo $this->Form->end(__('Register')); ?>
 </div>

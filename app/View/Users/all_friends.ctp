@@ -8,12 +8,13 @@
 
           <div class="friend-image">
             <?php echo $this->Html->image('/app/webroot/img/user-alt-128.png', array( "alt" => "user-img",'height'=>80, 
-                    'width'=>80, 'url' => array('controller' => 'users', 'action' => 'publicProfile',$user['users']['id'])));?>
+                    'width'=>80, 'url' => array('controller' => 'users',
+                     'action' => 'publicProfile',$user['User']['id'])));?>
           </div>
 
           <div class="friend-info">
             <div class="friend-name">
-              <span class="title"><?php echo $user['users']['username']; ?></span>
+              <span class="title"><?php echo $user['User']['username']; ?></span>
             </div>
             
           </div>

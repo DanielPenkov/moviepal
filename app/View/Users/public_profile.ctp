@@ -1,4 +1,6 @@
-<h1> User Movies</h1>
+<h1>  <?php echo $username;?> Movies</h1>
+
+
  <?php foreach ($movies as $movie): ?>
  
       <div class="col-md-12">
@@ -20,7 +22,7 @@
       		<span> Year: <?php echo $movie['movies']['year']; ?> | </span>
       		<span> Rating: <?php echo $movie['movies']['rating']; ?></span>
       		<h4> Plot: <?php echo $movie['movies']['description']; ?></h4>
-          <?php echo $this->Html->link( 'Delete' , array('controller' => 'movies','action' => 'deleteUserMovie',$movie['movies']['id'] ), array('escape' => false,'confirm' => 'Add movie to Watching List?')); ?>
+         
 
       	</div>
 

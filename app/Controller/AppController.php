@@ -36,9 +36,9 @@ public $components = array('Session', 'Auth' => array(
 	$this->set('loggedIn', $this->Auth->loggedIn());
 
     $this->Auth->allow('index', 'add', 'login','get_all_movies','movie_id', 'addMovieWatchingList','addMovieWatchedList',
-        'getUserToWatchMovies');
+        'getUserToWatchMovies', 'register');
     $this->Security->unlockedActions = array('edit','delete','add','view', 'get_all_movies','getUserToWatchMovies',
-         'addMovieWatchedList', 'addMovieWatchingList','addUserFriends', 'find', 'movie_id', 'add');
+         'addMovieWatchedList', 'addMovieWatchingList','sendFriendRequest', 'find', 'movie_id','register');
 
     if ($this->Auth->user('id')) {
         $this->set('loggedIn', true);

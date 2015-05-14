@@ -4,106 +4,157 @@ class MoviesController extends AppController {
 
     public $helpers = array('Html', 'Form');
 	public $components = array('RequestHandler','Session');
-		var $uses = array('Movie','Actor', 'Country', 'Director', 'Genre', 'Writer', 'ActorsMovie', 
-			'CountriesMovie', 'DirectorsMovie', 'GenresMovie', 'WritersMovie','User','UsersMovie');
 
 
-  
+	
 
-    public function index() {
-    
-    	
+   public function index() {
 
 		$this->loadmodel('Genre');
 		$dropdownitems = $this->Genre->find('list',  array('fields' => array('Genre.genre')));
 		$this->set(compact('dropdownitems'));
 
-
-		//$this->Movie->recursive = -1;
-
 		if ($this->request->is('ajax')) {
-			$this->autoRender = false;
-			$results = $this->Movie->find('all', array(
-			'fields' => array('Movie.title'),
-			'conditions' => array('Movie.title LIKE ' => $this->request->query['q'] .'%')
-			));
-			foreach($results as $result) {
-			echo $result['Movie']['title'] . "\n";
+
+				$this->autoRender = false;
+				$results = $this->Movie->find('all', array(
+				'fields' => array('Movie.title'),
+				'conditions' => array('Movie.title LIKE ' => $this->request->query['q'] .'%')
+				));
+				foreach($results as $result) {
+					echo $result['Movie']['title'] . "\n";
 			}
-		 
 		} 
 
 		if($this->request->is('post')) {
 
-
-		$data = $this->request->data;
-		
+			$data = $this->request->data;
 
 			if($data['Movie']['Title'] && $data['Movie']['dropdownitem'] ==''){
 				
-
-							$result = $this->Movie->find('all', array('conditions' => array('title LIKE' =>'%'.$data['Movie']['Title'].'%', 'type' => 'movie', "not" => array ( "Movie.poster" => 'N/A'))));
-							//debug($result);
-			$this->set('movies',$result);		
+				$result =$this->Movie->getMovieByTitle($data['Movie']['Title']);
+				$this->set('movies',$result);		
 			}
 
 			if($data['Movie']['dropdownitem'] && $data['Movie']['Title'] == ''){
 			
-							$this->loadmodel('GenresMovies');
-							$this->GenresMovies->recursive = 2;
-
-							$result = $this->GenresMovies->find('all', array('conditions' => array('genre_id' => $data['Movie']['dropdownitem'], 'type' => 'movie', "not" => array ( "Movie.poster" => 'N/A'))));
-							//debug($result);
-			$this->set('movies',$result);		
+				$result = $this->Movie->getMoviesByGenre($data['Movie']['dropdownitem']);
+				$this->set('movies',$result);		
 			}
 			if($data['Movie']['dropdownitem'] && $data['Movie']['Title']){
 				
-						ini_set('max_execution_time', 3000);
-						$this->Movie->recursive =-1;
-				
-						$result = $this->Movie->find('all', 
-							array('conditions' => array('Movie.title LIKE' =>'%'.$data['Movie']['Title'].'%', 'Movie.type' => 'movie',
-							 "not" => array ( "Movie.poster" => 'N/A')), 'joins' => array(
-							    array(
-							        'table' => 'genres_movies',
-							        'alias' => 'GenresMovies',
-							        'type' => 'INNER',
-							        'foreignKey' => false,
-							        'conditions'=> array('GenresMovies.genre_id='.$data['Movie']['dropdownitem'],'GenresMovies.movie_id= Movie.id' )
-			))));
-							
-			$this->set('movies',$result);			
+				$result = $this->Movie->getMovieByGenreAndTitle($data['Movie']['Title'], $data['Movie']['dropdownitem']);			
+				$this->set('movies',$result);			
 			}
-
-
 		
 		}else{
 
-			 $result = $this->Movie->find('all', array('conditions' => array('type' => 'movie', 'year >' => '1980'  ,"not" => array ( "Movie.poster" => 'N/A')
-        	)));
+			 $result = $this->Movie->find('all', 
+			 	array('conditions' => array('type' => 'movie',"not" => array ("Movie.poster" => 'N/A')), 
+			 	 	  	'order' => array('Movie.year' => 'DESC'), 
+			 	 		'limit' => 20
+			 	)
+			 );
 
-        $this->set('movies',$result);
-
+        	$this->set('movies',$result);
 
 		}
         		
+    }
 
+ 	public function addMovieWatchedList(){
+
+        $this->autoRender = false; 
+        $this->request->onlyAllow('ajax');
+
+        $movie_id = json_encode($this->request->data['id']);
+        $user_id = $this->Auth->user('id');
+ 
+        $message = $this->Movie->addToWatchedList($movie_id, $user_id);
+        $this->set('_serialize', 'message');
+        return json_encode($message);
+	}
+
+	public function addMovieWatchingList(){
+
+    	$this->autoRender = false; 
+        $this->request->onlyAllow('ajax');
+
+        $movie_id = json_encode($this->request->data['id']);
+        $user_id = $this->Auth->user('id');
+ 
+        $message = $this->Movie->addToWatchingList($movie_id, $user_id);
+        $this->set('_serialize', 'message');
+        return json_encode($message);
+    }
+
+    public function deleteUserMovie($movie_id){
+
+        	$user_id  = $this->Auth->user('id');
+        	if($this->Movie->deleteFromList($movie_id, $user_id)){
+
+        		$this->redirect( '/users' );
+        	}
+        	
+        			
+    }
+
+   public function getWatchingMovies($user_id){
+
+        $result = $this->Movie->getWatchingMovies($user_id);
+
+        return $result;
 
     }
 
 
-    public function tv_index() {
+  public function getWatchedMovies($user_id){
 
-    	//$this->Movie->recursive = 1;
-
-        $result = $this->Movie->find('all', array('conditions' => array('type' => 'series' , "not" => array ( "Movie.poster" => 'N/A')
-        	), array('limit' => 50)));
-
-        $this->set('movies',$result);
+       
+        $result = $this->Movie->getWatchedMovies($user_id);
+        return $result;
 
     }
 
-        public function updateDatabase() {
+    public function getRecommendedMovies($user_id){
+
+       
+        $result = $this->Movie->getRecommendedMovies($user_id);
+        return $result;
+
+    }
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function updateDatabase() {
         	ini_set('max_execution_time', 3000);
    
 			$movies = array();
@@ -125,7 +176,7 @@ class MoviesController extends AppController {
 	        	$poster = $movie['Poster'];
 	        	$type = $movie['Type'];
 
-	        	$this->addMovie($title, $year, $description, $rating, $poster, $type);
+	        	$this->Movie->add($title, $year, $description, $rating, $poster, $type);
 
 	        	$this->Movie->recursive = -1;
 	        	$result = $this->Movie->find('all', array(
@@ -144,7 +195,6 @@ class MoviesController extends AppController {
 
 	        	}
 	        	
-
 	        	$country = explode(",", $movie['Country']) ;
 
 	        	foreach ($country as $ctr) {
@@ -152,7 +202,6 @@ class MoviesController extends AppController {
 	        		$this->addCountry($ctr);
 	        		$this->addCountryMovie($ctr,$movie_id);
 	        	}
-
 
 	        	$directors = explode(",", $movie['Director']) ;
 
@@ -162,19 +211,15 @@ class MoviesController extends AppController {
 	        	   	$this->addDirectorMovie($dir, $movie_id );	
 	        	   }
 
-
 	        	$genre = explode(",", $movie['Genre']) ;
 
 	        	  foreach ($genre as $gnr) {
 
 	        	  	$this->addGenre($gnr);
 	        	  	$this->addGenreMovie($gnr,  $movie_id);
-	
 	        	}
 
-
 	        	$writers = explode(",", $movie['Writer']) ;
-
 
 	        	 foreach ($writers as $wrt) {
 
@@ -186,30 +231,6 @@ class MoviesController extends AppController {
 	     }
     }
 
-    public function addMovie($title, $year, $description, $rating, $poster, $type){
-
-    	$this->Movie->recursive = -1;
-	    $result = $this->Movie->find('all', array(
-            		'conditions'=>array('Movie.title'=>$title)));
-
-	    if(count($result)==0){
-
-	        $movie_data = array(
-
-			   	'Movie' => array(
-				 	'title' => $title,
-				    'year' => $year,
-				    'description' => $description,
-				    'rating' => $rating,
-				    'poster' => $poster,
-				    'type' =>$type
-			    	 ) 
-			);
-
-			$this->Movie->create();
-	        $this->Movie->save($movie_data);
-	    }
-    }
 
     public function addActor($actr){
 
@@ -418,219 +439,5 @@ class MoviesController extends AppController {
 
 	     	}  
     }
-
-    public function addMovieWatchingList(){
-
-    	$this->autoRender = false; // We don't render a view in this example
-         $this->request->onlyAllow('ajax'); // No direct access via browser URL
-
-    	$movie_id = json_encode($this->request->data['id']);
-
-    	$data = array(
-
-	        	'UsersMovie' =>array(
-	        		'user_id' =>$this->Auth->user('id'),
-	        		'movie_id'=>$movie_id,
-	        		'status' => 1
-	        	)
-	        );
-
-
-    	 $result_check = $this->UsersMovie->find('first',array('conditions' => array('movie_id' => $movie_id, 'user_id' => $this->Auth->user('id'))));
-
-    	 $message='1';
-
-	     	if(count($result_check)==0){
-
-	     		  $this->UsersMovie->saveAll($data['UsersMovie']);
-	     		   $message = 'inserted';
-
-	     	}
-	     	return json_encode($message);
-    }
-
-    public function addMovieWatchedList(){
-
-    	 $this->autoRender = false; // We don't render a view in this example
-         $this->request->onlyAllow('ajax'); // No direct access via browser URL
-
-
-        $movie_id = json_encode($this->request->data['id']);
-        
-    	
-    	$data = array(
-
-	        	'UsersMovie' =>array(
-	        		'user_id' =>$this->Auth->user('id'),
-	        		'movie_id'=>$movie_id,
-	        		'status' => 2
-	        	)
-	        );
-
-
-    	 $result_check = $this->UsersMovie->find('first',array('conditions' => array('movie_id' => $movie_id, 'user_id' => $this->Auth->user('id'))));
-
-	     	if(count($result_check)==0){
-
-	     		  $this->UsersMovie->saveAll($data['UsersMovie']);
-
-	     		  $message = 'inserted';
-
-	     	}else{
-
-	     		$this->UsersMovie->query('UPDATE users_movies
-    								 SET status = 2
-          							 Where  users_movies.user_id ='.$this->Auth->user('id').' AND  users_movies.movie_id='.$movie_id);
-	     		$message = 'updated';
-	     	
-
-
-	     	}
-
-	     	$this->set('_serialize', 'message');
-			return json_encode($message);
-
-
-
-    }
-
-    public function deleteUserMovie($movie_id){
-
-        	$user_id  = $this->Auth->user('id');
-
-        	$this->Movie->query('DELETE FROM users_movies WHERE movie_id = '.$movie_id.' AND user_id ='.$user_id);
-
-			$this->redirect( '/users' );
-
-    }
-
-
-
-
-public function import() {
-
- $file = $_SERVER['DOCUMENT_ROOT'] .'/index.json';
-	        $data = json_decode(file_get_contents($file));
-	        $ind= (array)$data;
-
-	        $index = $ind[0];
-
-	        if($index<1000000){
-
-
-	        	$prefix="tt";
-    	$data = null;
-    	$movies = array();
-    	$fname = null;
-
-    	$start = $index+1000000;
-    	$end = $start+5;
-    	
-    	for ($i=$start; $i <=$end; $i++) {
-
-    			$ct = substr_replace((string)$i,"0",0,1); 
-    		
-    			$id = $prefix.$ct;
-
-
-    			$json = file_get_contents('http://www.omdbapi.com/?i='.(string)$id.'&plot=full&r=json');
-
-    		if(json_decode($json) != null){
-
-    			$data = json_decode($json);
-    			array_push($movies,$data);
-    		}
-
-    		$fname = $id;
-    		
-    	}
-		$data_all = json_encode($movies);
-
-	$file = fopen($_SERVER['DOCUMENT_ROOT'] .'/'.'index'.'.json','w+');
-     fwrite($file, $index+5);
-    fclose($file);
-
-    	$file = fopen($_SERVER['DOCUMENT_ROOT'] .'/'.$fname.'.json','w+');
-     fwrite($file, $data_all);
-    fclose($file);
-
-
-
-	        }else{
-
-	     $prefix="tt";
-    	$data = null;
-    	$movies = array();
-    	$fname = null;
-    	
-    	for ($i=1000700; $i <=1000701 ; $i++) {
-
-    			$ct = substr_replace((string)$i,"2",0,1); 
-    		
-    			$id = $prefix.$ct;
-
-
-    			$json = file_get_contents('http://www.omdbapi.com/?i='.(string)$id.'&plot=full&r=json');
-
-    		if(json_decode($json) != null){
-
-    			$data = json_decode($json);
-    			array_push($movies,$data);
-    		}
-
-    		$fname = $id;
-    		
-    	}
-		$data_all = json_encode($movies);
-
-    	$file = fopen($_SERVER['DOCUMENT_ROOT'] .'/'.$fname.'.json','w+');
-     fwrite($file, $data_all);
-    fclose($file);
-
-
-
-
-
-
-	        }
-
-
-    	
-
-    	
-   
-
-
-    }
-
-
-
-
-  //   public function find() {
-
-		// $this->Movie->recursive = -1;
-		// if ($this->request->is('ajax')) {
-		// $this->autoRender = false;
-		// $results = $this->Movie->find('all', array(
-		// 'fields' => array('Movie.title'),
-		// //remove the leading '%' if you want to restrict the matches more
-		// 'conditions' => array('Movie.title LIKE ' =>  $this->request->query['q'] . '%')
-		// ));
-		// foreach($results as $result) {
-		// echo $result['Movie']['title'] . "\n";
-		// }
-		 
-		// } else {
-		// //if the form wasn't submitted with JavaScript
-		// //set a session variable with the search term in and redirect to index page
-
-		// debug($this->request->data);
-		// CakeSession::write('movieTitle', $this->request->data['Movie']['Title']);
-		// $this->redirect(array('action' => 'index'));
-		
-		// }
-		// }
-
-
 
 }

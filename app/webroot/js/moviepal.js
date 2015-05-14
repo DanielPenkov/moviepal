@@ -18,8 +18,6 @@ function PopupCenterDual(url, title, w, h) {
 
 
 
-            // '<?php echo $this->Html->url(array('controller'=>'movies','action'=>'addMovieWatchedList'))); ?>',
-
 function addToWatchedList(movie_id) {
 
       var data = movie_id;
@@ -82,7 +80,7 @@ function addFriend(user_id) {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             type: "POST",
-            url: '/moviepal/users/addUserFriends',
+            url: '/moviepal/users/sendFriendRequest',
             data: JSON.stringify({user_id: data}),
             success: function (data){
 
