@@ -17,7 +17,8 @@ class Notification extends AppModel {
     public function get($user_id){
 
         $this->recursive = 2;
-        $result = $this->find('all',array('conditions' => array('recipient_id' => $user_id , 'status' => 0)));
+        $result = $this->find('all',array('conditions' => array('recipient_id' => $user_id , 
+           'status' => 0, 'type'=> 4), 'order'=>'Notification.date_sent DESC'));
         return $result;
 
     }

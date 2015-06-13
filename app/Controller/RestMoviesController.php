@@ -6,6 +6,13 @@ class RestMoviesController extends AppController {
     public $helpers = array('Html', 'Form');
 	public $components = array('RequestHandler');
 
+    public function beforeFilter(){
+    if ($this->request->accepts('application/json')) {
+        $this->RequestHandler->renderAs($this, 'json');
+    }
+    parent::beforeFilter();
+}
+
 
 	public function index() {
         $this->response->header('Access-Control-Allow-Origin', '*');
@@ -37,14 +44,14 @@ class RestMoviesController extends AppController {
         $dataUserMovie = array(
 
                 'UsersMovie' =>array(
-                    'user_id' =>$data['User']['user_id'],
-                    'movie_id'=>$data['Movie']['movie_id'],
-                    'status' => $data['Movie']['status']
+                    'user_id' =>$data['user_id'],
+                    'movie_id'=>$data['movie_id'],
+                    'status' => $data['status']
                 )
             );
 
             $this->loadModel('UsersMovie');
-         $result_check = $this->UsersMovie->find('first',array('conditions' => array('movie_id' => $data['Movie']['movie_id'], 'user_id' => $data['User']['user_id'])));
+         $result_check = $this->UsersMovie->find('first',array('conditions' => array('movie_id' => $data['movie_id'], 'user_id' => $data['user_id'])));
 
             if(count($result_check)==0){
 
@@ -73,14 +80,14 @@ class RestMoviesController extends AppController {
         $dataUserMovie = array(
 
                 'UsersMovie' =>array(
-                    'user_id' =>$data['User']['user_id'],
-                    'movie_id'=>$data['Movie']['movie_id'],
-                    'status' => $data['Movie']['status']
+                    'user_id' =>$data['user_id'],
+                    'movie_id'=>$data['movie_id'],
+                    'status' => $data['status']
                 )
             );
 
             $this->loadModel('UsersMovie');
-         $result_check = $this->UsersMovie->find('first',array('conditions' => array('movie_id' => $data['Movie']['movie_id'], 'user_id' => $data['User']['user_id'])));
+         $result_check = $this->UsersMovie->find('first',array('conditions' => array('movie_id' => $data['movie_id'], 'user_id' => $data['user_id'])));
 
             if(count($result_check)==0){
 

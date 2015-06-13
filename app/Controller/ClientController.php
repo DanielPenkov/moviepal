@@ -21,9 +21,6 @@ class ClientController extends AppController {
 		$this -> render('/Client/request_response');
 	}
 
-
-
-	
 	
 	public function request_addMovieWatchingList(){
 	
@@ -31,9 +28,9 @@ class ClientController extends AppController {
 		$link =  "http://" . $_SERVER['HTTP_HOST'] . $this->webroot.'rest_movies/addMovieWatchingList.json';
 		$data = null;
 		$httpSocket = new HttpSocket();
-		$data['Movie']['movie_id'] = '3320';
-		$data['Movie']['status'] = '1';
-		$data['User']['user_id'] = '39';
+		$data['movie_id'] = '413';
+		$data['status'] = '1';
+		$data['user_id'] = '1';
 		$response = $httpSocket->post($link, $data );
 		$this->set('response_code', $response->code);
 		$this->set('response_body', $response->body);
@@ -48,9 +45,9 @@ class ClientController extends AppController {
 		$link =  "http://" . $_SERVER['HTTP_HOST'] . $this->webroot.'rest_movies/addMovieWatchedList.json';
 		$data = null;
 		$httpSocket = new HttpSocket();
-		$data['Movie']['movie_id'] = '3574';
-		$data['Movie']['status'] = '2';
-		$data['User']['user_id'] = '39';
+		$data['movie_id'] = '7001';
+		$data['status'] = '2';
+		$data['user_id'] = '1';
 		$response = $httpSocket->post($link, $data );
 		$this->set('response_code', $response->code);
 		$this->set('response_body', $response->body);

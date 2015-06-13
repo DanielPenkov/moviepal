@@ -50,7 +50,7 @@ public $components = array('Session', 'Auth' => array(
         $this->loadModel('Notifications');
         $result = $this->Notifications->query('SELECT users.id,users.username,notifications.id, notifications.type
                                                 FROM notifications, users
-                                        Where  users.id = notifications.sender_id AND notifications.recipient_id ='.$uid.' AND notifications.status = 0');
+                                        Where  users.id = notifications.sender_id AND notifications.recipient_id ='.$uid.' AND notifications.status = 0 AND notifications.type = 4');
 
          
         $this->set('vat', count($result));

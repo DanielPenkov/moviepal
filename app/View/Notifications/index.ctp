@@ -23,12 +23,16 @@
             </div>
             
           </div>
-          <div class="user-notification-buttons">
 
+            
+                 <?php if ($notification['Notification']['status'] == 0):?>
+
+          <div class="user-notification-buttons">
           	<span> <?php echo $this->Html->link( 'Accept' , array('controller' => 'notifications','action' => 'acceptFriendRequest',$notification['Notification']['id'], $notification['User']['id'] ), array('escape' => false,'confirm' => 'Accept?')); ?></span>
 
           	 <span style="  margin-left: 100px;"><?php echo $this->Html->link( 'Ignore' , array('controller' => 'notifications','action' => 'ignoreFriendRequest',$notification['Notification']['id'] ), array('escape' => false,'confirm' => 'Ignore?')); ?> </span>
           </div>
+          <?php endif; ?>
         </div>
       </div>
 

@@ -514,7 +514,6 @@ p.error em {
 }
 
 /* Buttons and button links */
-input[type=submit],
 .actions ul li a,
 .actions a {
 	font-weight:normal;
@@ -955,7 +954,7 @@ float: right;
 
 #movie-list{
 
-	height: 600px;
+	height: 650px;
 	  text-align: center;
 }
 
@@ -988,4 +987,34 @@ display: block;
 font: menu;
 overflow: hidden;
 color: #333;
+}
+
+
+
+
+.search-form div{
+	clear: none;
+  margin: 0px;
+  padding: 0px;
+
+}
+
+
+.search-input-genre{
+	width: 99%;
+	  height: 35px;
+
+
+}
+.search-input-title{
+	width: 99%;
+}
+
+.search-button{
+	 height: 35px;
+
+}
+.search-div{
+
+	margin: 20px;
 }

@@ -5,9 +5,6 @@ class MoviesController extends AppController {
     public $helpers = array('Html', 'Form');
 	public $components = array('RequestHandler','Session');
 
-
-	
-
    public function index() {
 
 		$this->loadmodel('Genre');
@@ -24,7 +21,7 @@ class MoviesController extends AppController {
 				foreach($results as $result) {
 					echo $result['Movie']['title'] . "\n";
 			}
-		} 
+		}
 
 		if($this->request->is('post')) {
 
@@ -39,6 +36,7 @@ class MoviesController extends AppController {
 			if($data['Movie']['dropdownitem'] && $data['Movie']['Title'] == ''){
 			
 				$result = $this->Movie->getMoviesByGenre($data['Movie']['dropdownitem']);
+			
 				$this->set('movies',$result);		
 			}
 			if($data['Movie']['dropdownitem'] && $data['Movie']['Title']){
@@ -50,12 +48,12 @@ class MoviesController extends AppController {
 		}else{
 
 			 $result = $this->Movie->find('all', 
-			 	array('conditions' => array('type' => 'movie',"not" => array ("Movie.poster" => 'N/A')), 
-			 	 	  	'order' => array('Movie.year' => 'DESC'), 
-			 	 		'limit' => 20
+			 	array('conditions' => array('type' => 'movie'), 
+			 	 	  	'order' => array('Movie.year' => 'DESC','Movie.rating' => 'DESC'),
+			 	 		'limit' => 30,
+			 	 		'contain' => array('Genre')
 			 	)
 			 );
-
         	$this->set('movies',$result);
 
 		}
@@ -159,7 +157,7 @@ class MoviesController extends AppController {
    
 			$movies = array();
 			$actors_data = array('Actor');
-	        $file = $_SERVER['DOCUMENT_ROOT'] .'/data/tt0257800.json';
+	        $file = $_SERVER['DOCUMENT_ROOT'] .'/data/tt0361800.json';
 	        $data = json_decode(file_get_contents($file));
 	        $movies = (array)$data;
 
@@ -182,8 +180,11 @@ class MoviesController extends AppController {
 	        	$result = $this->Movie->find('all', array(
             		'conditions'=>array('Movie.title'=>$title)));
 
+
 	        	$movie_id = $result[0]['Movie']['id'];
-	        
+	        	debug($movie_id);
+	        	debug($title);
+
 
 	        	$actors =explode(",", $movie['Actors']) ;
 
@@ -254,6 +255,7 @@ class MoviesController extends AppController {
     public function addActorMovie($actr, $movie_id){
 
     	$this->loadmodel('Actor');
+    	$this->loadmodel('ActorsMovie');
 	    $result = $this->Actor->find('first',array('conditions' => array('name' => $actr)));
 
 
@@ -298,6 +300,7 @@ class MoviesController extends AppController {
 
 
     	$this->loadmodel('Country');
+    	$this->loadmodel('CountriesMovie');
 	    $result = $this->Country->find('first',array('conditions' => array('country' => $ctr)));
 
 	    $country_id = $result['Country']['id'];
@@ -338,6 +341,7 @@ class MoviesController extends AppController {
     public function addDirectorMovie($dir, $movie_id ){
 
     	$this->loadmodel('Director');
+    	$this->loadmodel('DirectorsMovie');
 	    $result = $this->Director->find('first',array('conditions' => array('name' => $dir)));
 
 	    $director_id = $result['Director']['id'];
@@ -378,6 +382,7 @@ class MoviesController extends AppController {
     public function addGenreMovie($gnr,  $movie_id){
 
     	$this->loadmodel('Genre');
+    	$this->loadmodel('GenresMovie');
 	    $result = $this->Genre->find('first',array('conditions' => array('genre' => $gnr)));
 
 	    $genre_id = $result['Genre']['id'];
@@ -420,6 +425,7 @@ class MoviesController extends AppController {
     public function addWriterMovie($wrt, $movie_id){
 
     	$this->loadmodel('Writer');
+    	$this->loadmodel('WritersMovie');
 	    $result = $this->Writer->find('first',array('conditions' => array('name' => $wrt)));
 
 	    $wrt_id = $result['Writer']['id'];

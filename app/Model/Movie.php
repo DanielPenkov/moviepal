@@ -1,8 +1,6 @@
 <?php
+
 class Movie extends AppModel {
-
-
-
 
     public $hasAndBelongsToMany = array(
         'Actor' =>
@@ -70,7 +68,10 @@ class Movie extends AppModel {
 
     public function add($title, $year, $description, $rating, $poster, $type){
 
-        if(getMovieById($title)!=false){
+   
+
+        if($this->getMovieByTitle($title)==false){
+
 
             $movie_data = array(
                 'Movie' => array(
@@ -92,7 +93,7 @@ class Movie extends AppModel {
 
          $result = $this->find('all', array(
             'conditions' => array('title LIKE' =>'%'.$title.'%',
-             'type' => 'movie', "not" => array ( "Movie.poster" => 'N/A'))));
+             'type' => 'movie', "not" => array ( "Movie.poster" => 'N/A')),'contain' => array('Genre')));
 
         if($result!=null){
 
@@ -107,11 +108,30 @@ class Movie extends AppModel {
 
     public function getMoviesByGenre($genre){
 
-        App::import('Model','GenresMovies');
-        $GenresMovies = new GenresMovies();
-         $result = $GenresMovies->find('all', array(
-            'conditions' => array('genre_id' => $genre,
-             'type' => 'movie', "not" => array ( "Movie.poster" => 'N/A'))));
+        $conditions = array();
+        $conditions['joins'] = array(
+            array(
+                'table' => 'genres_movies',
+                'alias' => 'GenresMovie',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'GenresMovie.movie_id = Movie.id'
+                )
+            ),
+            array(
+                'table' => 'genres',
+                'alias' => 'Genre',
+                'type' => 'INNER',
+                'conditions' => array(
+                    'Genre.id = GenresMovie.genre_id',
+                    'Genre.id = "' . $genre . '"'
+                )
+            )
+        );
+
+        $conditions['contain'] = array('Genre'); 
+
+        $result = $this->find('all', $conditions);
 
         if($result!=null){
 
@@ -126,20 +146,21 @@ class Movie extends AppModel {
 
     public function getMovieByGenreAndTitle($title, $genre){
                 
-        $result = $this->find('all', 
-                array('conditions' => array('Movie.title LIKE' =>'%'.$title.'%', 'Movie.type' => 'movie',
-                "not" => array ( "Movie.poster" => 'N/A')), 'joins' => array(
+        $result = $this->find('all', array(
+            'conditions' => array('Movie.title LIKE' =>'%'.$title.'%', 'Movie.type' => 'movie'),
+            'contain' => array('Genre'),
+            'joins' => array(
                 array(
                     'table' => 'genres_movies',
                     'alias' => 'GenresMovies',
                     'type' => 'INNER',
                     'foreignKey' => false,
                     'conditions'=> array('GenresMovies.genre_id='.$genre,'GenresMovies.movie_id= Movie.id' )
-            ))));
+                )
+            )
+        ));
 
         return $result;
-
-
     }
 
     
